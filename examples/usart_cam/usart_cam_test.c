@@ -1,10 +1,10 @@
 #include "cam_usart_example.h"
 #include "setup.h"
-#include "utils.h"
 #include "systick.h"
+#include "utils.h"
 
-
-int main(void) {
+int main(void)
+{
 	setup();
 
 	cam_example();

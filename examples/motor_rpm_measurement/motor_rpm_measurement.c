@@ -216,16 +216,16 @@ uint32_t get_motor_last_measured_rpm(void)
 	uint32_t diff_count_time = 0;
 
 	if (last_interrupt == CH1) {
-		diff_count_time =
-		    (MILLISEC_SLICES * (last_edge_ch1_ms_time - last_edge_ch2_ms_time)) +
-		    last_edge_ch2_time - last_edge_ch1_time;
+		diff_count_time = (MILLISEC_SLICES * (last_edge_ch1_ms_time -
+						      last_edge_ch2_ms_time)) +
+				  last_edge_ch2_time - last_edge_ch1_time;
 	} else {
-		diff_count_time =
-		    (MILLISEC_SLICES * (last_edge_ch2_ms_time - last_edge_ch1_ms_time)) +
-		    last_edge_ch1_time - last_edge_ch2_time;		
+		diff_count_time = (MILLISEC_SLICES * (last_edge_ch2_ms_time -
+						      last_edge_ch1_ms_time)) +
+				  last_edge_ch1_time - last_edge_ch2_time;
 	}
 
-    return 45000000 / diff_count_time;
+	return 45000000 / diff_count_time;
 }
 
 void setup_irq_timers(void)
@@ -305,7 +305,8 @@ int main(void)
 			}
 
 			printf("Time: %lu PWM: %lu RPM: %lu AGG: %lu\n",
-			       millis / 500, pwm_value, get_motor_last_measured_rpm(), agg);
+			       millis / 500, pwm_value,
+			       get_motor_last_measured_rpm(), agg);
 			last_loop_ms = current_loop_ms;
 			agg = 0;
 		}

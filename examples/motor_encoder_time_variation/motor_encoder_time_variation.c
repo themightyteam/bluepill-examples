@@ -21,7 +21,6 @@ volatile uint8_t take_samples = 0;
 volatile uint16_t save_index = 0;
 volatile uint16_t samples[LENGHT_ARRAY_SAMPLES];
 
-
 /*
  * Setup clocks of internal connections
  */
@@ -115,7 +114,7 @@ void exti15_10_isr(void)
 	edge_ch1_clk_time = systick_get_value();
 	edge_ch1_ms_time = millis;
 
-	if ((take_samples==1)&&(last_interrupt == CH2)) {
+	if ((take_samples == 1) && (last_interrupt == CH2)) {
 		samples[save_index] =
 		    (MILLISEC_SLICES * (edge_ch1_ms_time - edge_ch2_ms_time)) +
 		    edge_ch2_clk_time - edge_ch1_clk_time;

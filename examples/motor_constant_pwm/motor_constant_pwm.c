@@ -65,8 +65,6 @@ void usart_setup(void)
 	usart_enable(USART1);
 }
 
-
-
 /*
  * @brief pwm engine setup
  */
@@ -202,10 +200,11 @@ int main(void)
 	set_left_motor_velocity(PWM_VALUE);
 
 	while (1) {
-		if (current_loop_ms == millis) continue;
+		if (current_loop_ms == millis)
+			continue;
 
 		current_loop_ms = millis;
-		
+
 		if ((current_loop_ms % 1000) == 0) {
 			gpio_toggle(INTERNAL_LED_PORT, INTERNAL_LED);
 		}

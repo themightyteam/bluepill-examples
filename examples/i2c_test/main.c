@@ -1,14 +1,15 @@
-#include "setup.h"
-#include "utils.h"
-#include "systick.h"
 #include "lib_vl6180x.h"
+#include "setup.h"
+#include "systick.h"
+#include "utils.h"
 
 struct choice_entry_st {
 	char choice;
 	void (*functionPtr)();
 };
 
-void single_range() {
+void single_range()
+{
 	printf("\nSingle range test\n");
 
 	// start single range measurement
@@ -24,7 +25,8 @@ void single_range() {
 	VL6180X_clear_interrupts();
 }
 
-void single_range_multiple_samples() {
+void single_range_multiple_samples()
+{
 	printf("\nMultiple samples of single range test\n");
 
 	for (uint8_t i = 0; i < 10; i++) {
@@ -42,7 +44,8 @@ void single_range_multiple_samples() {
 	}
 }
 
-void continous_mode_sampling() {
+void continous_mode_sampling()
+{
 	printf("\nContinuous mode sampling test\n");
 
 	// start single range measurement
@@ -60,22 +63,24 @@ void continous_mode_sampling() {
 	}
 }
 
-void example_2(int b) {
+void example_2(int b)
+{
 	printf("\nThis is Test 2 (%d)\n", b);
 }
 
 #define CHOICES_LEN 3
 struct choice_entry_st choices[] = {
-		{ .choice = '1', .functionPtr = single_range },
-		{ .choice = '2', .functionPtr = single_range_multiple_samples },
-		{ .choice = '3', .functionPtr = continous_mode_sampling }
-		};
+    {.choice = '1', .functionPtr = single_range},
+    {.choice = '2', .functionPtr = single_range_multiple_samples},
+    {.choice = '3', .functionPtr = continous_mode_sampling}};
 
-int main(void) {
+int main(void)
+{
 	uint8_t res = setup();
 	if (res != SETUP_OK) {
 		printf("Setup error code %d\n", res);
-		while (1){};
+		while (1) {
+		};
 	}
 
 	while (1) {

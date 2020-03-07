@@ -10,7 +10,6 @@
 
 #include <stdint.h>
 
-
 void vbatt_adc_setup();
 
 // returns battery in milivolts

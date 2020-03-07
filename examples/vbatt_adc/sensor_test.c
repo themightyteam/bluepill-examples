@@ -17,19 +17,21 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/usart.h>
-#include <libopencm3/stm32/adc.h>
-#include <stdio.h>
 #include <errno.h>
+#include <libopencm3/stm32/adc.h>
+#include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/usart.h>
+#include <stdio.h>
 #include <unistd.h>
 
 #include "vbatt.h"
 
-#define WAIT_NUMBER 800000 // for a relevant wait time amount write 800000 or more
+#define WAIT_NUMBER                                                            \
+	800000 // for a relevant wait time amount write 800000 or more
 
-int _write(int file, char *ptr, int len) {
+int _write(int file, char *ptr, int len)
+{
 	int i;
 
 	if (file == 1) {
@@ -42,7 +44,8 @@ int _write(int file, char *ptr, int len) {
 	return -1;
 }
 
-static void clock_setup(void) {
+static void clock_setup(void)
+{
 	rcc_clock_setup_in_hse_8mhz_out_72mhz();
 
 	/* Enable GPIOA, GPIOB and GPIOC clock. */
@@ -67,10 +70,11 @@ static void clock_setup(void) {
 #define USART_PARITY USART_PARITY_EVEN
 #define USART_FLOWCONTROL USART_FLOWCONTROL_NONE
 
-static void usart_setup(void) {
+static void usart_setup(void)
+{
 	/* Setup GPIO pin GPIO_USART1_TX. */
 	gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_50_MHZ,
-			GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO_USART1_TX);
+		      GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO_USART1_TX);
 
 	/* Setup USART PARAMETERS */
 	usart_set_baudrate(USART1, USART_BAUDRATE);
@@ -84,21 +88,19 @@ static void usart_setup(void) {
 	usart_enable(USART1);
 }
 
-
-
-static void gpio_setup(void) {
+static void gpio_setup(void)
+{
 	/* Set GPIO12 (in GPIO port C) to 'output push-pull'. */
 	gpio_set_mode(INTERNAL_LED_PORT, GPIO_MODE_OUTPUT_2_MHZ,
-			GPIO_CNF_OUTPUT_PUSHPULL, INTERNAL_LED);
+		      GPIO_CNF_OUTPUT_PUSHPULL, INTERNAL_LED);
 
 	/* Set GPIO B1 to 'output push-pull' */
 	gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL,
-			GPIO1);
-
+		      GPIO1);
 }
 
-
-int main(void) {
+int main(void)
+{
 	int i;
 
 	clock_setup();

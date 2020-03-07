@@ -13,10 +13,10 @@
 // Call it once before using this functionality
 void flash_non_structured_setup();
 
-uint32_t flash_program_data(uint32_t start_address, uint8_t *input_data
-		, uint16_t num_elements);
+uint32_t flash_program_data(uint32_t start_address, uint8_t *input_data,
+			    uint16_t num_elements);
 
-void flash_read_data(uint32_t start_address, uint16_t num_elements
-		, uint8_t *output_data);
+void flash_read_data(uint32_t start_address, uint16_t num_elements,
+		     uint8_t *output_data);
 
 #endif

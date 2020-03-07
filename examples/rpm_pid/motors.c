@@ -1,6 +1,5 @@
 #include "motors.h"
 
-
 /* storing last velocities for debug */
 static int32_t last_left_vel = 0;
 
@@ -46,7 +45,6 @@ void set_left_motor_pwm(int32_t value)
 		value = MAX_PWM_VALUE - value;
 	timer_set_oc_value(PWM_MOTOR_TIMER, LEFT_MOTOR_OUTPUT_CHANNEL, value);
 }
-
 
 /*
  * @brief set left motor velocity

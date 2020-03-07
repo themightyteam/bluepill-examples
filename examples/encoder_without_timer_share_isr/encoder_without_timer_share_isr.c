@@ -48,7 +48,8 @@ static void exti_setup(void)
 	nvic_enable_irq(NVIC_EXTI9_5_IRQ);
 
 	/* Set GPIO6 and GPIO7 (in GPIO port B) to 'input open-drain'. */
-	gpio_set_mode(GPIOB, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, GPIO6 | GPIO7);
+	gpio_set_mode(GPIOB, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT,
+		      GPIO6 | GPIO7);
 
 	/* Configure the EXTI subsystem. */
 	exti_select_source(EXTI6 | EXTI7, GPIOB);
@@ -56,9 +57,7 @@ static void exti_setup(void)
 	ch2_direction = FALLING;
 	exti_set_trigger(EXTI6 | EXTI7, EXTI_TRIGGER_FALLING);
 	exti_enable_request(EXTI6 | EXTI7);
-
 }
-
 
 void ch1_isr(void)
 {
@@ -68,7 +67,7 @@ void ch1_isr(void)
 		} else {
 			counter--;
 		}
-        falling_edge_ch1++;
+		falling_edge_ch1++;
 		ch1_direction = RISING;
 		exti_set_trigger(EXTI6, EXTI_TRIGGER_RISING);
 	} else {
@@ -93,7 +92,7 @@ void ch2_isr(void)
 		} else {
 			counter++;
 		}
-        falling_edge_ch2++;
+		falling_edge_ch2++;
 		ch2_direction = RISING;
 		exti_set_trigger(EXTI7, EXTI_TRIGGER_RISING);
 	} else {
@@ -118,7 +117,6 @@ void exti9_5_isr(void)
 		exti_reset_request(EXTI7);
 	}
 }
-
 
 /*
  * @brief Setup usart
@@ -149,7 +147,6 @@ void usart_setup(void)
 
 void encoder_setup()
 {
-
 }
 
 /*
@@ -183,7 +180,6 @@ void gpio_setup(void)
 	/* Set internal LED */
 	gpio_set_mode(LED1_PORT, GPIO_MODE_OUTPUT_2_MHZ,
 		      GPIO_CNF_OUTPUT_PUSHPULL, LED1_PIN);
-
 }
 
 /*
@@ -205,8 +201,7 @@ void setup_microcontroller(void)
 	encoder_setup();
 	/* Line sensor setup */
 	systick_setup();
-    exti_setup();
-
+	exti_setup();
 }
 
 /*
@@ -226,7 +221,10 @@ int main(void)
 
 		if ((current_loop_ms - last_loop_ms) >= 1000) {
 			gpio_toggle(INTERNAL_LED_PORT, INTERNAL_LED);
-			printf("Time: %lu F1: %lu R1: %lu F2: %lu R2: %lu ABS: %lu\n", millis / 1000, falling_edge_ch1, rising_edge_ch1, falling_edge_ch2, rising_edge_ch2, counter);
+			printf("Time: %lu F1: %lu R1: %lu F2: %lu R2: %lu ABS: "
+			       "%lu\n",
+			       millis / 1000, falling_edge_ch1, rising_edge_ch1,
+			       falling_edge_ch2, rising_edge_ch2, counter);
 			last_loop_ms = current_loop_ms;
 		}
 	}

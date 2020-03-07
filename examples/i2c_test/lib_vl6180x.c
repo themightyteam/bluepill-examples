@@ -1,5 +1,5 @@
-#include "lib_i2c.h"
 #include "lib_vl6180x.h"
+#include "lib_i2c.h"
 
 // There is also a VL618X library in
 // https://www.st.com/en/embedded-software/stsw-img003.html
@@ -157,9 +157,9 @@ const uint16_t VL6180_RESULT__INTERRUPT_STATUS_GPIO = 0x04F;
 // depends on Gain and integration settings and calibrated lux/count setting.
 const uint16_t VL6180_RESULT__ALS_VAL = 0x050;
 // 8 16bit registers with latest values with the following format:
-// Range mode; Bits[15:8] range_val t0; Bits[7:0] range_val_t0-1 (so we have 16 values)
-// ALS mode; Bits[15:0] als_val_latest
-const uint16_t VL6180_RESULT__HISTORY_BUFFER_0 = 0x052; //0x052:0x060
+// Range mode; Bits[15:8] range_val t0; Bits[7:0] range_val_t0-1 (so we have 16
+// values) ALS mode; Bits[15:0] als_val_latest
+const uint16_t VL6180_RESULT__HISTORY_BUFFER_0 = 0x052; // 0x052:0x060
 // Final range result value presented to the user for use. Unit is in mm.
 const uint16_t VL6180_RESULT__RANGE_VAL = 0x062;
 // Raw Range result value with offset applied (no cross-talk compensation
@@ -211,10 +211,11 @@ const uint16_t VL6180_I2C_SLAVE__DEVICE_ADDRESS = 0x212;
 // measurement.
 const uint16_t VL6180_INTERLEAVED_MODE__ENABLE = 0x2A3;
 
-void VL6180X_write_recommneded_registers() {
+void VL6180X_write_recommneded_registers()
+{
 	// https://www.pololu.com/file/0J962/AN4545.pdf
-	// Below are the recommended settings required to be loaded onto the VL6180X during the
-	// initialisation of the device (see Section 1.3).
+	// Below are the recommended settings required to be loaded onto the
+	// VL6180X during the initialisation of the device (see Section 1.3).
 	// Mandatory : private registers
 	lib_i2c_write_byte(VL6180_ADDRESS, 0x0207, 0x01);
 	lib_i2c_write_byte(VL6180_ADDRESS, 0x0208, 0x01);
@@ -253,43 +254,50 @@ void VL6180X_write_recommneded_registers() {
 	lib_i2c_write_byte(VL6180_ADDRESS, VL6180_SYSTEM__MODE_GPIO1, 0x10);
 	// Set the averaging sample period (compromise between lower noise and
 	// increased execution time)
-	lib_i2c_write_byte(VL6180_ADDRESS, VL6180_READOUT__AVERAGING_SAMPLE_PERIOD,
-			0x30);
+	lib_i2c_write_byte(VL6180_ADDRESS,
+			   VL6180_READOUT__AVERAGING_SAMPLE_PERIOD, 0x30);
 	// Sets the light and dark gain (upper nibble). Dark gain should not be
 	// changed.
 	lib_i2c_write_byte(VL6180_ADDRESS, VL6180_SYSALS__ANALOGUE_GAIN, 0x46);
-	// sets the # of range measurements after which auto calibration of system
-	// is performed
-	lib_i2c_write_byte(VL6180_ADDRESS, VL6180_SYSRANGE__VHV_REPEAT_RATE, 0xFF);
+	// sets the # of range measurements after which auto calibration of
+	// system is performed
+	lib_i2c_write_byte(VL6180_ADDRESS, VL6180_SYSRANGE__VHV_REPEAT_RATE,
+			   0xFF);
 	// Set ALS integration time to 100ms
-	lib_i2c_write_byte(VL6180_ADDRESS, VL6180_SYSALS__INTEGRATION_PERIOD, 0x63);
+	lib_i2c_write_byte(VL6180_ADDRESS, VL6180_SYSALS__INTEGRATION_PERIOD,
+			   0x63);
 	// perform a single temperature calibration of the ranging sensor
-	lib_i2c_write_byte(VL6180_ADDRESS, VL6180_SYSRANGE__VHV_RECALIBRATE, 0x01);
+	lib_i2c_write_byte(VL6180_ADDRESS, VL6180_SYSRANGE__VHV_RECALIBRATE,
+			   0x01);
 
-	//Optional: Public registers - See data sheet for more detail
+	// Optional: Public registers - See data sheet for more detail
 
 	// Set default ranging inter-measurement period to 100ms
-	lib_i2c_write_byte(VL6180_ADDRESS, VL6180_SYSRANGE__INTERMEASUREMENT_PERIOD,
-			0x09);
+	lib_i2c_write_byte(VL6180_ADDRESS,
+			   VL6180_SYSRANGE__INTERMEASUREMENT_PERIOD, 0x09);
 	// Set default ALS inter-measurement period to 500ms
-	lib_i2c_write_byte(VL6180_ADDRESS, VL6180_SYSALS__INTERMEASUREMENT_PERIOD,
-			0x31);
+	lib_i2c_write_byte(VL6180_ADDRESS,
+			   VL6180_SYSALS__INTERMEASUREMENT_PERIOD, 0x31);
 	// Configures interrupt on ‘New Sample Ready threshold event’
-	lib_i2c_write_byte(VL6180_ADDRESS, VL6180_SYSTEM__INTERRUPT_CONFIG_GPIO, 0x24);
+	lib_i2c_write_byte(VL6180_ADDRESS, VL6180_SYSTEM__INTERRUPT_CONFIG_GPIO,
+			   0x24);
 }
 
 // start single range measurement
-void VL6180X_start_single_range() {
+void VL6180X_start_single_range()
+{
 	lib_i2c_write_byte(VL6180_ADDRESS, VL6180_SYSRANGE__START, 0x01);
 }
 
 // start continuous range measurement
-void VL6180X_start_continuous_range() {
+void VL6180X_start_continuous_range()
+{
 	lib_i2c_write_byte(VL6180_ADDRESS, VL6180_SYSRANGE__START, 0x03);
 }
 
 // poll the VL6180X till new sample ready
-void VL6180X_poll_range() {
+void VL6180X_poll_range()
+{
 	uint8_t status;
 	uint8_t range_status;
 
@@ -301,31 +309,37 @@ void VL6180X_poll_range() {
 	while (range_status != 0x04) {
 		status = lib_i2c_read_byte(VL6180_ADDRESS, 0x04f);
 		range_status = status & 0x07;
-		//wait_ms(1); // (can be removed)
+		// wait_ms(1); // (can be removed)
 	}
 }
 
 // read range result
-uint8_t VL6180X_read_range() {
+uint8_t VL6180X_read_range()
+{
 	uint8_t range;
 	range = lib_i2c_read_byte(VL6180_ADDRESS, 0x062);
 	return range;
 }
 
 // clear the interrupt on VL6180X
-void VL6180X_clear_interrupts() {
-	lib_i2c_write_byte(VL6180_ADDRESS, VL6180_SYSTEM__INTERRUPT_CLEAR, 0x07);
+void VL6180X_clear_interrupts()
+{
+	lib_i2c_write_byte(VL6180_ADDRESS, VL6180_SYSTEM__INTERRUPT_CLEAR,
+			   0x07);
 }
 
 // Setup of the VL6180X. Needs to be done once before using the device.
-uint8_t VL6180X_setup() {
+uint8_t VL6180X_setup()
+{
 	uint8_t reset = 0;
-	reset = lib_i2c_read_byte(VL6180_ADDRESS, VL6180_SYSTEM__FRESH_OUT_OF_RESET);
+	reset = lib_i2c_read_byte(VL6180_ADDRESS,
+				  VL6180_SYSTEM__FRESH_OUT_OF_RESET);
 	if (reset != 1) {
 		return -1;
 	}
 
 	VL6180X_write_recommneded_registers();
-	lib_i2c_write_byte(VL6180_ADDRESS, VL6180_SYSTEM__FRESH_OUT_OF_RESET, 0x00);
+	lib_i2c_write_byte(VL6180_ADDRESS, VL6180_SYSTEM__FRESH_OUT_OF_RESET,
+			   0x00);
 	return 1;
 }

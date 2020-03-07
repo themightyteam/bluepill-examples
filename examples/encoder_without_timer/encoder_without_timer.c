@@ -71,21 +71,19 @@ static void exti_setup(void)
 	ch2_direction = FALLING;
 	exti_set_trigger(EXTI3, EXTI_TRIGGER_FALLING);
 	exti_enable_request(EXTI3);
-
 }
-
 
 void exti15_10_isr(void)
 {
-	
+
 	if (ch1_direction == FALLING) {
-		
+
 		if (ch2_direction == RISING) {
 			counter++;
 		} else {
 			counter--;
 		}
-        
+
 		falling_edge_ch1++;
 		ch1_direction = RISING;
 		exti_set_trigger(EXTI15, EXTI_TRIGGER_RISING);
@@ -101,7 +99,6 @@ void exti15_10_isr(void)
 		rising_edge_ch1++;
 		ch1_direction = FALLING;
 		exti_set_trigger(EXTI15, EXTI_TRIGGER_FALLING);
-	
 	}
 
 	exti_reset_request(EXTI15);
@@ -115,7 +112,7 @@ void exti3_isr(void)
 		} else {
 			counter++;
 		}
-        falling_edge_ch2++;
+		falling_edge_ch2++;
 		ch2_direction = RISING;
 		exti_set_trigger(EXTI3, EXTI_TRIGGER_RISING);
 	} else {
@@ -131,7 +128,6 @@ void exti3_isr(void)
 
 	exti_reset_request(EXTI3);
 }
-
 
 /*
  * @brief Setup usart
@@ -162,7 +158,6 @@ void usart_setup(void)
 
 void encoder_setup()
 {
-
 }
 
 /*
@@ -196,7 +191,6 @@ void gpio_setup(void)
 	/* Set internal LED */
 	gpio_set_mode(LED1_PORT, GPIO_MODE_OUTPUT_2_MHZ,
 		      GPIO_CNF_OUTPUT_PUSHPULL, LED1_PIN);
-
 }
 
 /*
@@ -218,8 +212,7 @@ void setup_microcontroller(void)
 	encoder_setup();
 	/* Line sensor setup */
 	systick_setup();
-    exti_setup();
-
+	exti_setup();
 }
 
 /*
@@ -239,7 +232,10 @@ int main(void)
 
 		if ((current_loop_ms - last_loop_ms) >= 1000) {
 			gpio_toggle(INTERNAL_LED_PORT, INTERNAL_LED);
-			printf("Time: %lu F1: %lu R1: %lu F2: %lu R2: %lu ABS: %lu\n", millis / 1000, falling_edge_ch1, rising_edge_ch1, falling_edge_ch2, rising_edge_ch2, counter);
+			printf("Time: %lu F1: %lu R1: %lu F2: %lu R2: %lu ABS: "
+			       "%lu\n",
+			       millis / 1000, falling_edge_ch1, rising_edge_ch1,
+			       falling_edge_ch2, rising_edge_ch2, counter);
 			last_loop_ms = current_loop_ms;
 		}
 	}

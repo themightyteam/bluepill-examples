@@ -250,7 +250,7 @@ uint32_t get_motor_last_measured_rpm(void)
 	}
 	diff_count_time /= NUM_SAMPLES;
 
-	//return 45000000 / diff_count_time;
+	// return 45000000 / diff_count_time;
 	return 360000000 / diff_count_time;
 }
 

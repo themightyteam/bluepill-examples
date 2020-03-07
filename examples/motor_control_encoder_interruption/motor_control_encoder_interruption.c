@@ -135,7 +135,6 @@ void gpio_setup(void)
 	/* Set internal LED */
 	gpio_set_mode(LED1_PORT, GPIO_MODE_OUTPUT_2_MHZ,
 		      GPIO_CNF_OUTPUT_PUSHPULL, LED1_PIN);
-
 }
 
 /*
@@ -182,7 +181,8 @@ int main(void)
 
 		if ((current_loop_ms - last_loop_ms) >= 1000) {
 			gpio_toggle(INTERNAL_LED_PORT, INTERNAL_LED);
-			printf("Time: %lu Updates: %lu\n", millis / 1000, left_encoder_updates);
+			printf("Time: %lu Updates: %lu\n", millis / 1000,
+			       left_encoder_updates);
 			last_loop_ms = current_loop_ms;
 		}
 	}

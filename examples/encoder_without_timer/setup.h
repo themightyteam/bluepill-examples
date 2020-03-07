@@ -5,11 +5,11 @@
 #include <libopencm3/cm3/scb.h>
 #include <libopencm3/cm3/systick.h>
 #include <libopencm3/stm32/adc.h>
+#include <libopencm3/stm32/exti.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/timer.h>
 #include <libopencm3/stm32/usart.h>
-#include <libopencm3/stm32/exti.h>
 
 /*
  *Active if alternate functions of pins are used

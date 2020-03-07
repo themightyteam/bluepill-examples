@@ -1,8 +1,8 @@
 #ifndef __LED_H
 #define __LED_H
 
-#include "systick.h"
 #include "setup.h"
+#include "systick.h"
 #include <stdio.h>
 
 #define LED_1 0

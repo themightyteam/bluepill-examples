@@ -9,6 +9,4 @@ void jukebox_play_current(void);
 void jukebox_play_next(void);
 int is_jukebox_playing(void);
 
-
-
 #endif /* __LIBJUKEBOX_H */

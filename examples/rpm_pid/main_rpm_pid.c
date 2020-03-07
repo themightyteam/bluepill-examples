@@ -245,7 +245,7 @@ uint32_t get_current_rpm(void)
 	}
 	diff_count_time /= NUM_SAMPLES;
 
-	//return 45000000 / diff_count_time;
+	// return 45000000 / diff_count_time;
 	return 360000000 / diff_count_time;
 }
 
@@ -301,20 +301,14 @@ void setup_microcontroller(void)
 	setup_irq_timers();
 }
 
-
 typedef struct {
 	uint32_t time;
 	uint32_t rpm;
 } rpm_event_t;
 
 #define MAX_EVENTS 5
-rpm_event_t rpm_events[]={
-	{ 5000, 15000 },
-	{ 7000, 20000 },
-	{ 9000, 10000 },
-	{ 11000, 30000 },
-	{ 13000, 0 }
-};
+rpm_event_t rpm_events[] = {
+    {5000, 15000}, {7000, 20000}, {9000, 10000}, {11000, 30000}, {13000, 0}};
 
 uint8_t rpm_index = 0;
 uint32_t target_rpm = 0;
@@ -325,21 +319,26 @@ uint32_t get_current_pwm()
 	return current_pwm;
 }
 
-void set_target_rpm(uint32_t rpm) {
+void set_target_rpm(uint32_t rpm)
+{
 	target_rpm = rpm;
 }
 
-void set_current_pwm(int32_t pwm) {
-	if (pwm > 999) current_pwm = 999;
-	else if (pwm < 0) current_pwm = 0;
-	else current_pwm = pwm;
+void set_current_pwm(int32_t pwm)
+{
+	if (pwm > 999)
+		current_pwm = 999;
+	else if (pwm < 0)
+		current_pwm = 0;
+	else
+		current_pwm = pwm;
 
 	set_left_motor_velocity(pwm);
 }
 
 static uint16_t k_p = 10; // Proportional constant
-static uint16_t k_i = 1;   // Integral constant
-static uint16_t k_d = 0;   // Derivative constant
+static uint16_t k_i = 1;  // Integral constant
+static uint16_t k_d = 0;  // Derivative constant
 
 int32_t proportional = 0;
 int32_t integral = 0;
@@ -354,7 +353,7 @@ int32_t pid(int32_t error)
 
 	proportional = error;
 	integral += error;
-	//integral = trunc_to_range(integral, -MAX_INTEGRAL, MAX_INTEGRAL);
+	// integral = trunc_to_range(integral, -MAX_INTEGRAL, MAX_INTEGRAL);
 	derivative = error - last_error;
 
 	last_error = error;
@@ -362,8 +361,10 @@ int32_t pid(int32_t error)
 	control = proportional * k_p + integral * k_i + derivative * k_d;
 	control = control / 10;
 
-	if (control > 999) control = 999;
-	if (control < 0) control = 0;
+	if (control > 999)
+		control = 999;
+	if (control < 0)
+		control = 0;
 
 	return control;
 }
@@ -380,7 +381,7 @@ int main(void)
 	uint32_t last_loop_ms = 0;
 	uint32_t current_loop_ms = 0;
 	rpm_event_t next_event = rpm_events[rpm_index++];
-	//rpm_event_t previous_event = {0, 0};
+	// rpm_event_t previous_event = {0, 0};
 	int32_t control = 0;
 
 	while (1) {
@@ -389,24 +390,23 @@ int main(void)
 		// Each millisecond
 		if (current_loop_ms != last_loop_ms) {
 			last_loop_ms = current_loop_ms;
-			if (millis % 500 == 0) gpio_toggle(INTERNAL_LED_PORT, INTERNAL_LED);
+			if (millis % 500 == 0)
+				gpio_toggle(INTERNAL_LED_PORT, INTERNAL_LED);
 
 			if (millis == next_event.time) {
 				set_target_rpm(next_event.rpm);
 				if (rpm_index < MAX_EVENTS) {
-					//previous_event = next_event;
+					// previous_event = next_event;
 					next_event = rpm_events[rpm_index++];
 				}
 			}
 
-
-			control = pid( target_rpm - get_current_rpm() );
-			set_current_pwm( control );
+			control = pid(target_rpm - get_current_rpm());
+			set_current_pwm(control);
 			// TARGET, CURRENT, PWM
-			printf("%i,%lu,%lu\n", rpm_index, get_current_rpm() / 10, get_current_pwm());
-
+			printf("%i,%lu,%lu\n", rpm_index,
+			       get_current_rpm() / 10, get_current_pwm());
 		}
-
 	}
 
 	return 0;

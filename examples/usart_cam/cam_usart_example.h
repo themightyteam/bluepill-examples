@@ -6,6 +6,4 @@
 
 void cam_example();
 
-
-
 #endif /* __CAM_EXAMPLE_H */

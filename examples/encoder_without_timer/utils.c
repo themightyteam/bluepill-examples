@@ -1,6 +1,7 @@
 #include "utils.h"
 
-int _write(int file, char *ptr, int len) {
+int _write(int file, char *ptr, int len)
+{
 	int i;
 
 	if (file == 1) {

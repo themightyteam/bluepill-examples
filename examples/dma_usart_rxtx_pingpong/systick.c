@@ -2,15 +2,18 @@
 
 static volatile uint32_t millisecs_since_start = 0;
 
-void sys_tick_handler(void) {
+void sys_tick_handler(void)
+{
 	millisecs_since_start++;
 }
 
-uint32_t get_millisecs_since_start() {
+uint32_t get_millisecs_since_start()
+{
 	return millisecs_since_start;
 }
 
-void systick_setup() {
+void systick_setup()
+{
 	// 72MHz / 8 => 9000000 counts per second
 	systick_set_clocksource(STK_CSR_CLKSOURCE_AHB_DIV8);
 

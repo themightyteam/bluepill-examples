@@ -1,5 +1,5 @@
 #include "libwhatever.h"
 
-void whatever_setup(){
-
+void whatever_setup()
+{
 }
