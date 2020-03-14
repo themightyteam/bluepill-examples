@@ -18,6 +18,7 @@
  */
 
 #include <errno.h>
+#include <libopencm3/cm3/scb.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/usart.h>
@@ -49,7 +50,14 @@ static void clock_setup(void)
 	/* Enable LED clock. */
 	rcc_periph_clock_enable(RCC_INTERNAL_LED);
 
+	/* Set internal LED */
+	gpio_set_mode(INTERNAL_LED_PORT, GPIO_MODE_OUTPUT_2_MHZ,
+		      GPIO_CNF_OUTPUT_PUSHPULL, INTERNAL_LED);
+
+	
+
 	/* Enable USART clock. */
+	rcc_periph_clock_enable(RCC_GPIOA); // Needed when BOOT0 is 0
 	rcc_periph_clock_enable(RCC_USART1);
 
 }
@@ -60,7 +68,7 @@ static void clock_setup(void)
 #define USART_BAUDRATE 115200
 #define USART_DATABITS 9
 #define USART_STOPBITS USART_STOPBITS_1
-#define USART_MODE USART_MODE_TX_RX
+#define USART_MODE USART_MODE_TX
 #define USART_PARITY USART_PARITY_EVEN
 #define USART_FLOWCONTROL USART_FLOWCONTROL_NONE
 
@@ -85,8 +93,9 @@ static void usart_setup(void)
 
 int main(void)
 {
-	int i;
 
+	SCB_VTOR = (uint32_t)0x08000000;
+	
 	clock_setup();
 	usart_setup();
 
@@ -95,13 +104,13 @@ int main(void)
 	uint32_t last_measured_cycle = 0;
 	uint32_t current_measured_cycle = 0;
 
-	/* Blink the LED (PC12) on the board with every transmitted byte. */
+	// Blinks led and prints half-period time
 	while (1) {
 		last_measured_cycle = dwt_read_cycle_counter();
 
 		gpio_toggle(INTERNAL_LED_PORT, INTERNAL_LED); /* LED on/off */
 
-		for (i = 0; i < WAIT_NUMBER; i++) /* Wait a bit. */
+		for (int i = 0; i < WAIT_NUMBER; i++) /* Wait a bit. */
 			__asm__("nop");
 
 		current_measured_cycle = dwt_read_cycle_counter();
