@@ -18,11 +18,11 @@
  */
 
 #include <errno.h>
+#include <libopencm3/cm3/dwt.h>
 #include <libopencm3/cm3/scb.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/usart.h>
-#include <libopencm3/cm3/dwt.h>
 #include <stdio.h>
 #include <unistd.h>
 
@@ -54,12 +54,9 @@ static void clock_setup(void)
 	gpio_set_mode(INTERNAL_LED_PORT, GPIO_MODE_OUTPUT_2_MHZ,
 		      GPIO_CNF_OUTPUT_PUSHPULL, INTERNAL_LED);
 
-	
-
 	/* Enable USART clock. */
 	rcc_periph_clock_enable(RCC_GPIOA); // Needed when BOOT0 is 0
 	rcc_periph_clock_enable(RCC_USART1);
-
 }
 
 /*
@@ -90,12 +87,11 @@ static void usart_setup(void)
 	usart_enable(USART1);
 }
 
-
 int main(void)
 {
 
 	SCB_VTOR = (uint32_t)0x08000000;
-	
+
 	clock_setup();
 	usart_setup();
 
@@ -114,7 +110,8 @@ int main(void)
 			__asm__("nop");
 
 		current_measured_cycle = dwt_read_cycle_counter();
-		printf("%u us\n", (current_measured_cycle - last_measured_cycle) / 72);
+		printf("%u us\n",
+		       (current_measured_cycle - last_measured_cycle) / 72);
 	}
 
 	return 0;
