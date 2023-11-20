@@ -5,6 +5,9 @@ OBJ_NO_DIR = $(CSRC:%.c=%.o)
 OBJ = $(patsubst %.c,$(BIN_PATH)/%.o,$(CSRC))
 
 DOCKER_IMAGE_NAME = mighty-arm-development
+DOCKER_TAG = 2023_11
+DOCKER_IMAGE_NAME_WITH_TAG = $(DOCKER_IMAGE_NAME):$(DOCKER_TAG)
+
 PORT = /dev/ttyUSB0
 EXAMPLE = bluepill_test
 
@@ -14,17 +17,17 @@ GID = $(shell id -g)
 build_image:
 	sudo docker build --build-arg UID=${UID} \
 		--build-arg GID=${GID} \
-		-t $(DOCKER_IMAGE_NAME) .
+		-t $(DOCKER_IMAGE_NAME_WITH_TAG) .
 
 rm_image:
-	sudo docker rmi -f $(DOCKER_IMAGE_NAME)
+	sudo docker rmi -f $(DOCKER_IMAGE_NAME_WITH_TAG)
 
 console: build_image
 	sudo docker run -v $(shell pwd):/home/src/ \
 		-ti \
 		--rm \
 		--device=$(PORT) \
-		$(DOCKER_IMAGE_NAME)
+		$(DOCKER_IMAGE_NAME_WITH_TAG)
 
 EXAMPLES := $(sort $(wildcard examples/*))
 FLASH := $(addsuffix _flash, $(EXAMPLES))
@@ -34,7 +37,7 @@ $(EXAMPLES): build_image
 	sudo docker run -v $(shell pwd):/home/src/ \
 		-ti \
 		--rm \
-		$(DOCKER_IMAGE_NAME) \
+		$(DOCKER_IMAGE_NAME_WITH_TAG) \
 		make -C $@ clean all BIN=$(BINARY)
 
 $(FLASH): FOLDER = $(subst _flash,,$@)
@@ -44,7 +47,7 @@ $(FLASH): build_image
 		-ti \
 		--rm \
 		--device=$(PORT) \
-		$(DOCKER_IMAGE_NAME) \
+		$(DOCKER_IMAGE_NAME_WITH_TAG) \
 		stm32loader -p $(PORT) -e -w -V -g 0x08000000 -v $(FOLDER)/$(BINARY).bin
 
 .PHONY: $(EXAMPLES) $(FLASH)
