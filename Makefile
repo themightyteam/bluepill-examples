@@ -19,18 +19,17 @@ build_image:
 rm_image:
 	sudo docker rmi -f $(DOCKER_IMAGE_NAME)
 
-console: build_image
+console:
 	sudo docker run -v $(shell pwd):/home/src/ \
 		-ti \
 		--rm \
-		--device=$(PORT) \
 		$(DOCKER_IMAGE_NAME)
 
 EXAMPLES := $(sort $(wildcard examples/*))
 FLASH := $(addsuffix _flash, $(EXAMPLES))
 
 $(EXAMPLES): BINARY = $(subst examples/,,$@)
-$(EXAMPLES): build_image
+$(EXAMPLES):
 	sudo docker run -v $(shell pwd):/home/src/ \
 		-ti \
 		--rm \
@@ -39,7 +38,7 @@ $(EXAMPLES): build_image
 
 $(FLASH): FOLDER = $(subst _flash,,$@)
 $(FLASH): BINARY = $(subst examples/,,$(FOLDER))
-$(FLASH): build_image
+$(FLASH):
 	sudo docker run -v $(shell pwd):/home/src/ \
 		-ti \
 		--rm \
