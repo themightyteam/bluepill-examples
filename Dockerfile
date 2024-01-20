@@ -1,15 +1,18 @@
-FROM debian:stretch-slim
+FROM debian:bullseye-slim
 
 RUN apt-get update && apt-get install -y \
   make \
-  python \
-  python-serial \
+  python3 \
   wget \
   tar \
   libncurses5-dev \
+  xz-utils \
+  bzip2 \
 && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt
+
+RUN ln -s /usr/bin/python3 /usr/bin/python
 
 #RUN pip --no-cache-dir install pyserial
 
