@@ -26,12 +26,8 @@ console:
 	sudo docker run -v $(shell pwd):/home/src/ \
 		-ti \
 		--rm \
-<<<<<<< HEAD
 		--device=$(PORT) \
 		$(DOCKER_IMAGE_NAME_WITH_TAG)
-=======
-		$(DOCKER_IMAGE_NAME)
->>>>>>> master
 
 EXAMPLES := $(sort $(wildcard examples/*))
 FLASH := $(addsuffix _flash, $(EXAMPLES))
