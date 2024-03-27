@@ -5,7 +5,7 @@ OBJ_NO_DIR = $(CSRC:%.c=%.o)
 OBJ = $(patsubst %.c,$(BIN_PATH)/%.o,$(CSRC))
 
 DOCKER_IMAGE_NAME = mighty-arm-development
-DOCKER_TAG = 2023_11
+DOCKER_TAG = 2024_03
 DOCKER_IMAGE_NAME_WITH_TAG = $(DOCKER_IMAGE_NAME):$(DOCKER_TAG)
 
 PORT = /dev/ttyUSB0

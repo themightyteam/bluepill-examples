@@ -2,6 +2,7 @@ FROM debian:bullseye-slim
 
 RUN apt-get update && apt-get install -y \
   make \
+  python2 \
   python3 \
   wget \
   tar \
@@ -10,9 +11,13 @@ RUN apt-get update && apt-get install -y \
   bzip2 \
 && rm -rf /var/lib/apt/lists/*
 
+RUN wget https://bootstrap.pypa.io/pip/2.7/get-pip.py && \
+  python2 get-pip.py && \
+  python2 -m pip install pyserial
+
 WORKDIR /opt
 
-RUN ln -s /usr/bin/python3 /usr/bin/python
+RUN ln -s /usr/bin/python2 /usr/bin/python
 
 #RUN pip --no-cache-dir install pyserial
 
